@@ -1,34 +1,30 @@
-# --- データ ---
-# 正本は ~/ResearchData_keep（data/source は symlink）。
-# 中間生成物は再生成できるのでコミットしない。symlink 自体もマシン依存なので追跡しない。
-data/
-
-# --- 結果 ---
-# 図は再生成できるのでコミットしない。表（csv）は軽いのでコミットする。
-results/figures/
-
-# --- 環境 ---
+# ===== Python / uv =====
 .venv/
-.env
-
-# --- macOS ---
-.DS_Store
-**/.DS_Store
-
-# --- Python ---
 __pycache__/
 *.py[cod]
 *.egg-info/
-build/
-dist/
-
-# --- Jupyter ---
 .ipynb_checkpoints/
-**/.ipynb_checkpoints/
 .virtual_documents/
+# uv.lock is intentionally tracked: it is what makes the environment reproducible.
 
-# --- テスト ---
-.pytest_cache/
+# ===== Data (kept out of Git; source of truth is ~/ResearchData_keep) =====
+# Ignore the contents, not the directory itself, so .gitkeep can be an exception.
+# This covers both the data/source symlink and data/interim.
+data/*
+!data/.gitkeep
 
-# --- Google Drive の一時ディレクトリ ---
-.tmp.driveupload/
+# ===== Results =====
+# Figures are regenerable, so they stay local. CSV tables under results/tables/ are tracked.
+results/figures/*
+!results/figures/.gitkeep
+
+# ===== Other generated artifacts =====
+*.h5
+
+# ===== Environment / secrets =====
+.env
+
+# ===== OS / editors =====
+.DS_Store
+.vscode/
+.idea/
