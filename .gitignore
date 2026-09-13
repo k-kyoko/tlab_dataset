@@ -1,0 +1,34 @@
+# --- データ ---
+# 正本は ~/ResearchData_keep（data/source は symlink）。
+# 中間生成物は再生成できるのでコミットしない。symlink 自体もマシン依存なので追跡しない。
+data/
+
+# --- 結果 ---
+# 図は再生成できるのでコミットしない。表（csv）は軽いのでコミットする。
+results/figures/
+
+# --- 環境 ---
+.venv/
+.env
+
+# --- macOS ---
+.DS_Store
+**/.DS_Store
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+.virtual_documents/
+
+# --- テスト ---
+.pytest_cache/
+
+# --- Google Drive の一時ディレクトリ ---
+.tmp.driveupload/
