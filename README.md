@@ -45,6 +45,32 @@ results/
 └── figures/      図。再生成できるので Git 外
 ```
 
+## ノートブック
+
+解析ノートブックはすべてここに集約している（ライブラリ側は関数だけを持つ）。
+
+| ファイル | 出自 | 内容 |
+| --- | --- | --- |
+| `calc_allsubs.ipynb` | qstr_diversity | 全被験者の dissim → genmag / spread を計算して h5 に保存 |
+| `calc_topbottom.ipynb` | qstr_diversity | BDI 上位／下位群での計算 |
+| `visualize_mean.ipynb` | qstr_diversity | 平均行列の指標をプロット |
+| `vizualize_allsubs.ipynb` | qstr_diversity | 全被験者・群ごとのプロット |
+| `MDS_mean.ipynb` / `MDS_individual.ipynb` | qstr_diversity | MDS 埋め込みと可視化 |
+| `stat_BDIandDI.ipynb` | qstr_diversity | BDI と多様性指標の相関 |
+| `_paperfig.ipynb` | qstr_diversity | 論文用の図 |
+| `genmag_exact_quickstart.ipynb` | genmag_exact | 厳密計算の動作確認 |
+| `genmag_exact_calc_allsubs.ipynb` | genmag_exact | 全被験者の厳密計算（並列＋タイムアウト） |
+
+パスはすべて `paths` 経由に書き換えてあり、`/home/jovyan/work` の直書きは残っていない。
+
+```python
+from qstr_dataset import paths
+
+paths.source("Amy_pilot", "raw", "Amy_dissimilarity.csv")  # 生データ（symlink 先）
+paths.interim("amy_processeddata_all.h5")                   # 中間生成物
+paths.figure("MDS", "mean")                                 # 図の出力先
+paths.table("genmag_exact_results.csv")                     # 表の出力先
+```
 ## データの置き場
 
 生データの正本は `~/ResearchData_keep`（Google Drive でバックアップ）。
