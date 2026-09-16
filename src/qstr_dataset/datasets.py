@@ -7,8 +7,10 @@
 
 from __future__ import annotations
 
+import warnings
 from typing import Literal
 
+import numpy as np
 import pandas as pd
 from qstr_diversity import core
 
@@ -77,12 +79,55 @@ def angus_dissimilarity(sub_no: int = -1, kind: AngusKind = "simi") -> pd.DataFr
 
 
 # --------------------------------------------------------------------------
+# Togashi
+# --------------------------------------------------------------------------
+
+#: Togashi データの置き場（``data/source`` の下のフォルダ名）。
+TOGASHI_FOLDER: str = "dissim_Togashi"
+
+
+def togashi_subjects() -> list[str]:
+    """被験者 ID の一覧。ファイル名 ``<id>_RDM.npy`` から拾う。"""
+    folder = paths.source(TOGASHI_FOLDER)
+    return sorted(path.name.removesuffix("_RDM.npy")
+                  for path in folder.glob("*_RDM.npy"))
+
+
+def togashi_dissimilarity(subject: str, zero_diagonal: bool = True) -> pd.DataFrame:
+    """Togashi データセットの非類似度行列（93×93、整数）。
+
+    ``zero_diagonal=True`` のとき、0 でない対角成分を 0 に直して警告を出す。
+    生ファイルには自己比較が 1 と記録された成分があり（001 と 004 で 9 個、
+    015 で 1 個）、そのままだと A(t) の対角が exp(-t) になって全ての値が変わる。
+    行列ラベルは刺激名が無いので 0 始まりの整数。
+    """
+    matrix = np.load(paths.source(TOGASHI_FOLDER, f"{subject}_RDM.npy")).astype(float)
+    nonzero_diagonal = int(np.count_nonzero(np.diag(matrix)))
+    if nonzero_diagonal and zero_diagonal:
+        warnings.warn(
+            f"subject {subject}: {nonzero_diagonal} diagonal entries were not zero "
+            "and have been set to zero",
+            stacklevel=2,
+        )
+        np.fill_diagonal(matrix, 0.0)
+    labels = list(range(len(matrix)))
+    return pd.DataFrame(matrix, index=labels, columns=labels)
+
+
+def togashi_all_subjects(zero_diagonal: bool = True) -> dict[str, pd.DataFrame]:
+    """被験者 ID -> 非類似度行列。"""
+    return {subject: togashi_dissimilarity(subject, zero_diagonal=zero_diagonal)
+            for subject in togashi_subjects()}
+
+
+# --------------------------------------------------------------------------
 # レジストリ
 # --------------------------------------------------------------------------
 
 DATASETS = {
     "amy": amy_dissimilarity,
     "angus": angus_dissimilarity,
+    "togashi": togashi_dissimilarity,
 }
 
 
