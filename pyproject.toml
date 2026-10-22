@@ -30,3 +30,9 @@ packages = ["src/qstr_dataset"]
 [tool.uv.sources]
 qstr-diversity = { path = "../qstr_diversity", editable = true }
 genmag-exact = { path = "../genmag_exact", editable = true }
+
+[dependency-groups]
+dev = [
+    "nbstripout>=0.9.1",
+    "pytest>=9.1.1",
+]
